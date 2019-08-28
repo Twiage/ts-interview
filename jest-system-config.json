@@ -1,0 +1,8 @@
+{
+  "verbose": true,
+  "testMatch": ["**/__system-tests__/**/*.ts?(x)"],
+  "roots": ["<rootDir>/src"],
+  "transform": {
+    "^.+\\.tsx?$": "ts-jest"
+  }
+}
