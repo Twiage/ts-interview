@@ -1,6 +1,9 @@
-import { AggregationCursor, Collection, Db, Server, ObjectId } from "mongodb";
-import MongoManager from "../MongoManager";
+import { AggregationCursor, Collection, Db, Server } from "mongodb";
+import MongoManager, {
+  LOCATION_UPDATES_COLLECTION_NAME
+} from "../MongoManager";
 
+import sinon = require("sinon");
 import config = require("config");
 import mongo = require("mongodb");
 
@@ -104,6 +107,50 @@ describe("mongoManager", () => {
         expectedLocationUpdate2
       );
       expect(mongoManager.database.close).toHaveBeenCalled();
+    });
+  });
+
+  describe("getLocationUpdate", () => {
+    it("should return omitted case object aka locationUpdate", async () => {
+      // Arrange
+      const expectedId = "foo";
+      const expectedLocationUpdate = {
+        _id: expectedId,
+        longitude: -73.93587335,
+        latitude: 41.69434459,
+        hospital: {
+          longitude: -73.935616,
+          latitude: 41.694549
+        }
+      };
+      const mongoManager = new MongoManager();
+      const mockCollection: Collection = {} as Collection;
+      const expectedLocationUpdatePromise = new Promise(resolve =>
+        resolve(expectedLocationUpdate)
+      );
+      const stubFindOne = sinon.stub();
+      const stubCollection = sinon.stub();
+
+      const expectedQuery = { _id: expectedId };
+
+      stubFindOne
+        .withArgs(expectedQuery)
+        .returns(expectedLocationUpdatePromise);
+      stubCollection
+        .withArgs(LOCATION_UPDATES_COLLECTION_NAME)
+        .returns(mockCollection);
+
+      mockCollection.findOne = stubFindOne;
+      mongoManager.database = new Db("twiage", new Server("localhost", 1234));
+      mongoManager.database.collection = stubCollection;
+
+      // Act
+      const actualLocationUpdate = await mongoManager.getLocationUpdate(
+        expectedId
+      );
+
+      // Assert
+      expect(actualLocationUpdate).toEqual(expectedLocationUpdate);
     });
   });
 

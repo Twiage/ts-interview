@@ -1,45 +1,126 @@
 # eta-calculator
 
-Estimate ETA for Twiage Cases!
+Estimate ETA for Twiage Cases
 
 ## Getting started
 
-TBD
+### Requirements
 
-## Environment variables
+1. Install [nvm](https://github.com/creationix/nvm):
 
-Environment variables are stored in encrypted files under [env](lambda/env) directory. CircleCI decrypts them to create a ECS task definition.
-We use [AWS Key Management Service](https://console.aws.amazon.com/kms/home?region=us-east-1#/kms/keys) to manage encryption keys.
-
-### How to encrypt file
-
-CD to [env](env) directory
+macOS or Ubuntu using bash
 
 ```shell script
-cd ./env
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
 ```
 
-Copy example
+or if you are using [zsh](https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH)
 
 ```shell script
-cp example.json {staging|demo|production}.json
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | zsh
 ```
 
-Put your variables
-
-Encrypt staging and demo files with [non-prod key](https://console.aws.amazon.com/kms/home?region=us-east-1#/kms/keys/745402c3-8c6e-4855-a396-9b87c9f3d7f9) or use [prod key]() to encrypt .env.production
+2. Install Node 10:
 
 ```shell script
-aws kms encrypt --key-id alias/twiage-env-vars-[non]-prod --plaintext fileb://{staging|demo|production}.json --output text --query CiphertextBlob | base64 --decode > encrypted.{staging|demo|production}.json
-# choose your enviroment
+nvm install 10 && nvm use 10
 ```
 
-**Make sure that unencrypted files are under [.gitignore](.gitignore) before push**
-
-### How to decrypt files
-
-If you need to decrypt file you can use similar decrypt KMS command. Note that you don't have to specify key to decrypt a file, KMS already knows which key to use. [deployment-nonprod](https://console.aws.amazon.com/iam/home?region=us-east-1#/users/deployment-nonprod) needs to have access to the key to decrypt files on CircleCI.
+In case if you get message `nvm command not found` add following lines at the end of your `~/.bash_profile` or `~/.zshrc`:
 
 ```shell script
-aws kms decrypt --ciphertext-blob fileb://encrypted.staging --output text --query Plaintext | base64 --decode
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+```
+
+and then run
+
+```shell script
+source ~/.bash_profile
+```
+
+or
+
+```shell script
+source ~/.zshrc
+```
+
+install yarn
+
+```shell script
+brew install yarn
+```
+
+## Testing
+
+We are using [Jest](https://facebook.github.io/jest/) as a testing framework.
+
+We put out tests at the same directory with testing code.
+
+#### Naming conventions
+
+`__system-tests__` - directory name for system tests
+
+`__unit-tests__` - directory name for unit tests
+
+### Unit testing
+
+WebStorm users can use run configuration.
+
+#### Run unit tests
+
+```bash
+yarn test:unit
+```
+
+#### Run specific test file
+
+```bash
+yarn test:unit ./src/modules/notifications/mediators/__unit-tests__/NotificationMediator.test.js
+```
+
+**For mac users**
+
+You need to install [watchman](https://facebook.github.io/watchman/docs/install.html#installing-on-os-x-via-homebrew) using brew
+
+```bash
+brew update && brew install watchman
+```
+
+### System testing
+
+WebStorm users can use run configuration
+
+```bash
+yarn test:system
+```
+
+## Task
+
+Make this lambda function handle individual location update.
+
+1. We have red unit test for _getLocationUpdate_ function under _MongoManager_. Implement code so test is no longer red.
+
+2. _distanceMatrixRequest_ method under _distanceMatrixService_ is designed to use a special data structure. Refactor it so instead it takes 2 arguments: point A and point B
+
+3. Add all necessary tests and implement code to handle individual location update
+
+## Dependencies
+
+To add prod dependency
+
+```bash
+yarn add {DEPENDENCY}
+```
+
+To add dev dependency (testing framework, build tool, assertion library linters etc)
+
+```bash
+yarn add -D {DEPENDENCY}
+```
+
+To remove dependency
+
+```bash
+yarn remove {DEPENDENCY}
 ```

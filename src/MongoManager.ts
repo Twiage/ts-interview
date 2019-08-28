@@ -3,7 +3,7 @@ import { Db, MongoClient } from "mongodb";
 import config = require("config");
 import moment = require("moment");
 
-const LOCATION_UPDATES_COLLECTION_NAME: string = config.get(
+export const LOCATION_UPDATES_COLLECTION_NAME: string = config.get(
   "mongo.collection.locationUpdates"
 );
 const CASES_COLLECTION_NAME: string = config.get("mongo.collection.cases");
@@ -89,6 +89,10 @@ class MongoManager {
       .then(() =>
         console.info(`${new Date().toISOString()} End of script run`)
       );
+  }
+
+  async getLocationUpdate(id: string) {
+    throw new Error("Not implemented");
   }
 
   async addLocationUpdate(eta, locationUpdate): Promise<void> {
