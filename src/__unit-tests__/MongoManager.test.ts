@@ -151,6 +151,10 @@ describe("mongoManager", () => {
 
       // Assert
       expect(actualLocationUpdate).toEqual(expectedLocationUpdate);
+      expect(stubFindOne.calledWith(expectedQuery)).toBeTruthy();
+      expect(
+        stubCollection.calledWith(LOCATION_UPDATES_COLLECTION_NAME)
+      ).toBeTruthy();
     });
   });
 
