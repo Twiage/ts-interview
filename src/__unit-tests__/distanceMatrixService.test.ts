@@ -7,7 +7,7 @@ import DistanceMatrixService, {
 import MongoManager from "../MongoManager";
 
 jest.mock("@mapbox/mapbox-sdk/services/matrix");
-jest.mock("../MongoManager");
+jest.mock("../mongoManager");
 
 describe("DistanceMatrixService", () => {
   describe("constructor", () => {

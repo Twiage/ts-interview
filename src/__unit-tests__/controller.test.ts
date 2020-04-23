@@ -9,7 +9,7 @@ import config = require("config");
 import mbxMatrix = require("@mapbox/mapbox-sdk/services/matrix");
 
 jest.mock("@mapbox/mapbox-sdk/services/matrix");
-jest.mock("../MongoManager");
+jest.mock("../mongoManager");
 jest.mock("../distanceMatrixService");
 jest.mock("../twiageApiService");
 
@@ -114,10 +114,10 @@ describe("controller", () => {
         await controller.handleLocationUpdate(expectedLocationUpdate);
 
         // Assert
-        expect(
-          mockDistanceMatrixService.distanceMatrixRequest
-        ).toHaveBeenCalledWith(expectedLocationUpdate);
-        expect(mockTwiageApiService.postEtaUpdate).toHaveBeenCalledWith(
+        expect(mockDistanceMatrixService.distanceMatrixRequest).toBeCalledWith(
+          expectedLocationUpdate
+        );
+        expect(mockTwiageApiService.postEtaUpdate).toBeCalledWith(
           expectedLocationUpdate
         );
       });
