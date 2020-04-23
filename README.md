@@ -99,7 +99,7 @@ yarn test:system
 
 Make this lambda function handle individual location update.
 
-1. We have red unit test for _getLocationUpdate_ function under _MongoManager_. Implement code so test is no longer red.
+1. We have red unit test for _getLocation_ function under _MongoManager_. Implement code so test is no longer red.
 
 2. _distanceMatrixRequest_ method under _distanceMatrixService_ is designed to use a special data structure. Refactor it so instead it takes 2 arguments: point A and point B
 

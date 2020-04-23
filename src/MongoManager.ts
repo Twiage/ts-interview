@@ -91,7 +91,7 @@ class MongoManager {
       );
   }
 
-  async getLocationUpdate(id: string) {
+  async getLocation(id: string) {
     throw new Error("Not implemented");
   }
 
