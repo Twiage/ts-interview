@@ -170,7 +170,9 @@ describe("mongoManager", () => {
 
       const mockDatabase = {
         collection: jest.fn(() => mockDatabase),
-        updateOne: jest.fn(() => new Promise(resolve => resolve()))
+        updateOne: jest.fn(
+          () => new Promise<void>(resolve => resolve())
+        )
       };
       const mongoManager = new MongoManager();
       mongoManager.database = mockDatabase;
