@@ -37,14 +37,13 @@ describe("DistanceMatrixService", () => {
       const expectedDestinationLongitude = -73.935616;
       const expectedDestinationLatitude = 41.694549;
 
-      const expectedLocationUpdate = {
-        _id: expectedId,
+      const origin = {
         longitude: expectedOriginLongitude,
-        latitude: expectedOriginLatitude,
-        hospital: {
-          longitude: expectedDestinationLongitude,
-          latitude: expectedDestinationLatitude
-        }
+        latitude: expectedOriginLatitude
+      };
+      const destination = {
+        longitude: expectedDestinationLongitude,
+        latitude: expectedDestinationLatitude
       };
 
       const expectedEtaInSeconds = 65.6;
@@ -52,8 +51,14 @@ describe("DistanceMatrixService", () => {
       const expectedMapboxMatrixData = {
         body: {
           code: "Ok",
-          distances: [[0, 139.9], [49, 0]],
-          durations: [[0, expectedEtaInSeconds], [25.5, 0]],
+          distances: [
+            [0, 139.9],
+            [49, 0]
+          ],
+          durations: [
+            [0, expectedEtaInSeconds],
+            [25.5, 0]
+          ],
           destinations: [
             { distance: 2.713771455, name: "", location: [] },
             { distance: 1.453423572, name: "", location: [] }
@@ -96,24 +101,29 @@ describe("DistanceMatrixService", () => {
       );
 
       // Act
-      await distanceMatrixService.distanceMatrixRequest(expectedLocationUpdate);
+      await distanceMatrixService.distanceMatrixRequest(
+        expectedId,
+        origin,
+        destination
+      );
 
       // Assert
       expect(mockMapboxMatrixClient.getMatrix).toHaveBeenCalledWith(
         expectedOptions
       );
-      expect(mockMongoManager.addLocationUpdate).toHaveBeenCalledWith(
-        expectedEtaInSeconds,
-        expectedLocationUpdate
-      );
+      expect(
+        mockMongoManager.addLocationUpdate
+      ).toHaveBeenCalledWith(expectedEtaInSeconds, { _id: expectedId });
     });
 
     it("invalid hospital location", async () => {
       // Arrange
       const expectedDistanceMatrixRequestResult = null;
-      const expectedLocationUpdate = {
-        hospital: {}
-      };
+
+      const expedtedId = 0;
+      const expectedOriginUpdate = {};
+      const expectedDestinationUpdate = {};
+
       const expectedMongoManager = {};
       const expectedMatrixClient = {};
 
@@ -124,7 +134,9 @@ describe("DistanceMatrixService", () => {
 
       // Act
       const actualDistanceMatrixRequestResult = await distanceMatrixService.distanceMatrixRequest(
-        expectedLocationUpdate
+        expedtedId,
+        expectedOriginUpdate,
+        expectedDestinationUpdate
       );
 
       // Assert
@@ -137,13 +149,16 @@ describe("DistanceMatrixService", () => {
       it("should not call addLocationUpdate", async () => {
         // Arrange
         const expectedLocationUpdate = {
-          _id: "im21",
+          _id: "im21"
+        };
+
+        const expectedOriginUpdate = {
           longitude: -73.93587335,
-          latitude: 41.69434459,
-          hospital: {
-            longitude: -73.935616,
-            latitude: 41.694549
-          }
+          latitude: 41.69434459
+        };
+        const expectedDestinationUpdate = {
+          longitude: -73.935616,
+          latitude: 41.694549
         };
 
         const expectedMapboxMatrixData = {

@@ -92,7 +92,9 @@ class MongoManager {
   }
 
   async getLocation(id: string) {
-    throw new Error("Not implemented");
+    return await this.database
+      .collection(LOCATION_UPDATES_COLLECTION_NAME)
+      .findOne({ _id: id });
   }
 
   async addLocationUpdate(eta, locationUpdate): Promise<void> {
