@@ -31,7 +31,6 @@ describe("DistanceMatrixService", () => {
   describe("distanceMatrixRequest", () => {
     it("happy path", async () => {
       // Arrange
-      const expectedId = "im21";
       const expectedOriginLongitude = -73.93587335;
       const expectedOriginLatitude = 41.69434459;
       const expectedDestinationLongitude = -73.935616;
@@ -101,26 +100,18 @@ describe("DistanceMatrixService", () => {
       );
 
       // Act
-      await distanceMatrixService.distanceMatrixRequest(
-        expectedId,
-        origin,
-        destination
-      );
+      await distanceMatrixService.distanceMatrixRequest(origin, destination);
 
       // Assert
       expect(mockMapboxMatrixClient.getMatrix).toHaveBeenCalledWith(
         expectedOptions
       );
-      expect(
-        mockMongoManager.addLocationUpdate
-      ).toHaveBeenCalledWith(expectedEtaInSeconds, { _id: expectedId });
     });
 
     it("invalid hospital location", async () => {
       // Arrange
       const expectedDistanceMatrixRequestResult = null;
 
-      const expedtedId = 0;
       const expectedOriginUpdate = {};
       const expectedDestinationUpdate = {};
 
@@ -134,7 +125,6 @@ describe("DistanceMatrixService", () => {
 
       // Act
       const actualDistanceMatrixRequestResult = await distanceMatrixService.distanceMatrixRequest(
-        expedtedId,
         expectedOriginUpdate,
         expectedDestinationUpdate
       );
@@ -148,9 +138,6 @@ describe("DistanceMatrixService", () => {
     describe("not OK response from matrix client", () => {
       it("should not call addLocationUpdate", async () => {
         // Arrange
-        const expectedLocationUpdate = {
-          _id: "im21"
-        };
 
         const expectedOriginUpdate = {
           longitude: -73.93587335,
@@ -182,7 +169,8 @@ describe("DistanceMatrixService", () => {
 
         // Act
         await distanceMatrixService.distanceMatrixRequest(
-          expectedLocationUpdate
+          expectedOriginUpdate,
+          expectedDestinationUpdate
         );
 
         // Assert
