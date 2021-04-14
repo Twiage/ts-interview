@@ -103,7 +103,7 @@ describe("controller", () => {
 
         const mockDistanceMatrixService = {
           distanceMatrixRequest: jest.fn(
-            () => new Promise(resolve => resolve())
+            () => new Promise<void>(resolve => resolve())
           )
         };
 

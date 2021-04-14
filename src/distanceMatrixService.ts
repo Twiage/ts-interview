@@ -12,15 +12,10 @@ class DistanceMatrixService {
     this.mongoManager = mongoManager;
   }
 
-  async distanceMatrixRequest(locationUpdate): Promise<unknown> {
-    if (
-      !locationUpdate.hospital.longitude ||
-      !locationUpdate.hospital.latitude
-    ) {
+  async distanceMatrixRequest(origin, destination): Promise<unknown> {
+    if (!destination.longitude || !destination.latitude) {
       console.error(
-        `${new Date().toISOString()} No Destination for case ${
-          locationUpdate._id
-        }`
+        `${new Date().toISOString()} No Destination for case ${destination}`
       );
       return null;
     }
@@ -29,13 +24,10 @@ class DistanceMatrixService {
       .getMatrix({
         points: [
           {
-            coordinates: [locationUpdate.longitude, locationUpdate.latitude]
+            coordinates: [origin.longitude, origin.latitude]
           },
           {
-            coordinates: [
-              locationUpdate.hospital.longitude,
-              locationUpdate.hospital.latitude
-            ],
+            coordinates: [destination.longitude, destination.latitude],
             approach: APPROACH
           }
         ],
@@ -43,11 +35,6 @@ class DistanceMatrixService {
         annotations: ANNOTATION
       })
       .send();
-
-    if (response.body.code.toUpperCase() === "OK") {
-      const eta = response.body.durations[0][1];
-      return this.mongoManager.addLocationUpdate(eta, locationUpdate);
-    }
 
     return null;
   }

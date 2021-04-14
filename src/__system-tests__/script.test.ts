@@ -47,11 +47,13 @@ describe("script system test", () => {
       toArray: () => new Promise(resolve => resolve([expectedLocationUpdate]))
     };
     const mockCollection = {
-      updateOne: jest.fn(() => new Promise(resolve => resolve())),
+      updateOne: jest.fn(
+        () => new Promise<void>(resolve => resolve())
+      ),
       aggregate: () => mockAggregateCursor
     };
     const mockDb = {
-      close: () => new Promise(resolve => resolve()),
+      close: () => new Promise<void>(resolve => resolve()),
       collection: () => mockCollection
     };
 
@@ -66,7 +68,9 @@ describe("script system test", () => {
 
     const mockConnect = async () => mockDb;
 
-    mockAxios.post.mockImplementation(() => new Promise(resolve => resolve()));
+    mockAxios.post.mockImplementation(
+      () => new Promise<void>(resolve => resolve())
+    );
     MockMongoClient.connect.mockImplementation(mockConnect);
 
     const mockMbxMatrix = sinon.stub();

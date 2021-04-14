@@ -170,7 +170,9 @@ describe("mongoManager", () => {
 
       const mockDatabase = {
         collection: jest.fn(() => mockDatabase),
-        updateOne: jest.fn(() => new Promise(resolve => resolve()))
+        updateOne: jest.fn(
+          () => new Promise<void>(resolve => resolve())
+        )
       };
       const mongoManager = new MongoManager();
       mongoManager.database = mockDatabase;
@@ -184,6 +186,42 @@ describe("mongoManager", () => {
         expectedQuery,
         expectedUpdateQuery
       );
+    });
+  });
+
+  describe("sendInvalidExpectedLocationId", () => {
+    it("should throw an error", async () => {
+      // Arrange
+      const expectedLocationId = "location-id";
+      const expectedQuery = { _id: expectedLocationId };
+      const expectedLocation = {
+        _id: expectedLocationId,
+        longitude: -73.93587335,
+        latitude: 41.69434459,
+        hospital: {
+          longitude: -73.935616,
+          latitude: 41.694549
+        }
+      };
+      const expectedError = new Error("Location not found.");
+
+      const mongoManager = new MongoManager();
+      mongoManager.database = new Db("twiage", new Server("localhost", 1234));
+      mongoManager.database.collection = jest.fn();
+
+      const mockLocationCollection: Collection = {} as Collection;
+      when(mongoManager.database.collection)
+        .calledWith(LOCATION_UPDATES_COLLECTION_NAME)
+        .mockReturnValue(mockLocationCollection);
+      mockLocationCollection.findOne = jest.fn();
+
+      try {
+        // Act
+        await mongoManager.getLocation(expectedLocationId);
+      } catch (actualError) {
+        // Assert
+        expect(actualError).toEqual(expectedError);
+      }
     });
   });
 });
