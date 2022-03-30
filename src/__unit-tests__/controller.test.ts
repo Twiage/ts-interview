@@ -9,7 +9,7 @@ import config = require("config");
 import mbxMatrix = require("@mapbox/mapbox-sdk/services/matrix");
 
 jest.mock("@mapbox/mapbox-sdk/services/matrix");
-jest.mock("../mongoManager");
+jest.mock("../MongoManager");
 jest.mock("../distanceMatrixService");
 jest.mock("../twiageApiService");
 
