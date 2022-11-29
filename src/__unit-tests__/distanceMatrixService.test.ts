@@ -7,7 +7,7 @@ import DistanceMatrixService, {
 import MongoManager from "../MongoManager";
 
 jest.mock("@mapbox/mapbox-sdk/services/matrix");
-jest.mock("../mongoManager");
+jest.mock("../MongoManager");
 
 describe("DistanceMatrixService", () => {
   describe("constructor", () => {
@@ -52,8 +52,14 @@ describe("DistanceMatrixService", () => {
       const expectedMapboxMatrixData = {
         body: {
           code: "Ok",
-          distances: [[0, 139.9], [49, 0]],
-          durations: [[0, expectedEtaInSeconds], [25.5, 0]],
+          distances: [
+            [0, 139.9],
+            [49, 0]
+          ],
+          durations: [
+            [0, expectedEtaInSeconds],
+            [25.5, 0]
+          ],
           destinations: [
             { distance: 2.713771455, name: "", location: [] },
             { distance: 1.453423572, name: "", location: [] }
