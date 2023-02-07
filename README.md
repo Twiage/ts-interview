@@ -20,10 +20,10 @@ or if you are using [zsh](https://github.com/robbyrussell/oh-my-zsh/wiki/Install
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | zsh
 ```
 
-2. Install Node 14:
+2. Install Node 16:
 
 ```shell script
-nvm install 14 && nvm use 14
+nvm install 16 && nvm use 16
 ```
 
 In case if you get message `nvm command not found` add following lines at the end of your `~/.bash_profile` or `~/.zshrc`:
