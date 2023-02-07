@@ -92,15 +92,13 @@ class MongoManager {
   }
 
   async getLocation(id: string) {
-    console.log("quering location updates");
-    let aggregateCursor;
-    console.info("Beginning aggregation");
     try {
-      return this.database
+      return await this.database
         .collection(LOCATION_UPDATES_COLLECTION_NAME)
         .findOne({ _id: id });
     } catch (ex) {
       console.error(ex);
+      throw new Error(ex);
     }
   }
 

@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint --quiet ./src/**/*.ts",
     "lint:fix": "eslint --fix ./src/**/*.ts",
-    "test:unit": "jest --config jest.config.json",
+    "test:unit": "jest --config jest.config.json --verbose",
     "test:system": "jest --config jest-system-config.json",
     "start": "node script.js",
     "deploy:major": "yarn version --major && git push --follow-tags",

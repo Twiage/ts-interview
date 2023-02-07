@@ -142,6 +142,45 @@ describe("mongoManager", () => {
       expect(mockLocationCollection.findOne).toBeCalledWith(expectedQuery);
     });
 
+    it("should throw an error if MongoManager throws an error", async () => {
+      // Arrange
+      const notFoundLocationId = "not-found-location-id";
+      const expectedQuery = { _id: notFoundLocationId };
+
+      const mongoManager = new MongoManager();
+      mongoManager.database = new Db("twiage", new Server("localhost", 1234));
+      mongoManager.database.collection = jest.fn();
+      const mockLocationCollection: Collection = {} as Collection;
+      when(mongoManager.database.collection)
+        .calledWith(LOCATION_UPDATES_COLLECTION_NAME)
+        .mockReturnValue(mockLocationCollection);
+
+      const expectedError = new Error("oops");
+      const mockConnect = () =>
+        new Promise((resolve, reject) => reject(expectedError));
+
+      mockLocationCollection.findOne = jest.fn();
+      when(mockLocationCollection.findOne)
+        .calledWith(expectedQuery)
+        .mockImplementationOnce(mockConnect);
+
+      let err;
+
+      // Act
+      try {
+        await mongoManager.getLocation(notFoundLocationId);
+      } catch (error) {
+        err = error;
+      }
+
+      // Assert
+      expect(err).toBeInstanceOf(Error);
+      expect(mongoManager.database.collection).toBeCalledWith(
+        LOCATION_UPDATES_COLLECTION_NAME
+      );
+      expect(mockLocationCollection.findOne).toBeCalledWith(expectedQuery);
+    });
+
     it("should return omitted case object aka locationUpdate", async () => {
       // Arrange
       const expectedLocationId = "location-id";
