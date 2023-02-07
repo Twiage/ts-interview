@@ -92,7 +92,16 @@ class MongoManager {
   }
 
   async getLocation(id: string) {
-    throw new Error("Not implemented");
+    console.log("quering location updates");
+    let aggregateCursor;
+    console.info("Beginning aggregation");
+    try {
+      return this.database
+        .collection(LOCATION_UPDATES_COLLECTION_NAME)
+        .findOne({ _id: id });
+    } catch (ex) {
+      console.error(ex);
+    }
   }
 
   async addLocationUpdate(eta, locationUpdate): Promise<void> {
