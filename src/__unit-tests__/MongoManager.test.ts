@@ -2,6 +2,7 @@ import { AggregationCursor, Collection, Db, Server } from "mongodb";
 import MongoManager, {
   LOCATION_UPDATES_COLLECTION_NAME
 } from "../MongoManager";
+
 import { when } from "jest-when";
 
 import config = require("config");
@@ -111,6 +112,36 @@ describe("mongoManager", () => {
   });
 
   describe("getLocationUpdate", () => {
+    it("should return undefined since the location was not found", async () => {
+      // Arrange
+      const notFoundLocationId = "not-found-location-id";
+      const expectedQuery = { _id: notFoundLocationId };
+      const expectedLocation = undefined;
+
+      const mongoManager = new MongoManager();
+      mongoManager.database = new Db("twiage", new Server("localhost", 1234));
+      mongoManager.database.collection = jest.fn();
+      const mockLocationCollection: Collection = {} as Collection;
+      when(mongoManager.database.collection)
+        .calledWith(LOCATION_UPDATES_COLLECTION_NAME)
+        .mockReturnValue(mockLocationCollection);
+
+      mockLocationCollection.findOne = jest.fn();
+      when(mockLocationCollection.findOne)
+        .calledWith(expectedQuery)
+        .mockResolvedValue(expectedLocation);
+
+      // Act
+      const actualLocation = await mongoManager.getLocation(notFoundLocationId);
+
+      // Assert
+      expect(actualLocation).toBeUndefined();
+      expect(mongoManager.database.collection).toBeCalledWith(
+        LOCATION_UPDATES_COLLECTION_NAME
+      );
+      expect(mockLocationCollection.findOne).toBeCalledWith(expectedQuery);
+    });
+
     it("should return omitted case object aka locationUpdate", async () => {
       // Arrange
       const expectedLocationId = "location-id";
