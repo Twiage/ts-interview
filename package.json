@@ -8,10 +8,7 @@
     "lint:fix": "eslint --fix ./src/**/*.ts",
     "test:unit": "jest --config jest.config.json",
     "test:system": "jest --config jest-system-config.json",
-    "start": "node script.js",
-    "deploy:major": "yarn version --major && git push --follow-tags",
-    "deploy:minor": "yarn version --minor && git push --follow-tags",
-    "deploy:patch": "yarn version --patch && git push --follow-tags"
+    "start": "node script.js"
   },
   "engines": {
     "node": "16.x"
