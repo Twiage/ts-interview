@@ -148,6 +148,31 @@ describe("mongoManager", () => {
       );
       expect(mockLocationCollection.findOne).toBeCalledWith(expectedQuery);
     });
+
+    it("should return null if there is no location found", async () => {
+      const expectedLocationId = "invalid-location";
+      const expectedQuery = { _id: expectedLocationId };
+      const mongoManager = new MongoManager();
+      mongoManager.database = new Db("twiage", new Server("localhost", 1234));
+      mongoManager.database.collection = jest.fn();
+      const mockLocationCollection: Collection = {} as Collection;
+      when(mongoManager.database.collection)
+        .calledWith(LOCATION_UPDATES_COLLECTION_NAME)
+        .mockReturnValue(mockLocationCollection);
+
+      mockLocationCollection.findOne = jest.fn();
+      when(mockLocationCollection.findOne)
+        .calledWith(expectedQuery)
+        .mockResolvedValue(null);
+
+      const actualLocation = await mongoManager.getLocation(expectedLocationId);
+
+      expect(actualLocation).toBeNull();
+      expect(mongoManager.database.collection).toBeCalledWith(
+        LOCATION_UPDATES_COLLECTION_NAME
+      );
+      expect(mockLocationCollection.findOne).toBeCalledWith(expectedQuery);
+    });
   });
 
   describe("addLocationUpdate", () => {

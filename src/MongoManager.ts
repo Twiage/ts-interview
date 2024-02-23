@@ -105,15 +105,6 @@ class MongoManager {
     } catch (error) {
       throw error;
     }
-    return {
-      _id: id,
-      longitude: -73.93587335,
-      latitude: 41.69434459,
-      hospital: {
-        longitude: -73.935616,
-        latitude: 41.694549
-      }
-    };
   }
 
   async addLocationUpdate(eta, locationUpdate): Promise<void> {
