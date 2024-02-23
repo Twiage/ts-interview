@@ -11,26 +11,7 @@ Estimate ETA for Twiage Cases
 macOS or Ubuntu using bash
 
 ```shell script
-curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
-```
-
-or if you are using [zsh](https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH)
-
-```shell script
-curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | zsh
-```
-
-2. Install Node 16:
-
-```shell script
-nvm install 16 && nvm use 16
-```
-
-In case if you get message `nvm command not found` add following lines at the end of your `~/.bash_profile` or `~/.zshrc`:
-
-```shell script
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
 ```
 
 and then run
@@ -45,10 +26,37 @@ or
 source ~/.zshrc
 ```
 
+and check if nvm is installed (v0.39.3)
+
+```shell script
+nvm --version
+```
+
+In case you get a `nvm command not found` message, add the following lines in the end of your `~/.bash_profile` or `~/.zshrc`:
+
+```shell script
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+```
+
+2. Install Node 16:
+
+```shell script
+nvm install 16 && nvm use 16
+```
+
 install yarn
+
+with brew:
 
 ```shell script
 brew install yarn
+```
+
+with npm
+
+```shell script
+npm install -g yarn
 ```
 
 ## Testing
@@ -71,12 +79,6 @@ WebStorm users can use run configuration.
 
 ```bash
 yarn test:unit
-```
-
-#### Run specific test file
-
-```bash
-yarn test:unit ./src/modules/notifications/mediators/__unit-tests__/NotificationMediator.test.js
 ```
 
 **For mac users**
