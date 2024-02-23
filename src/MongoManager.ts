@@ -1,4 +1,4 @@
-import { Db, MongoClient } from "mongodb";
+import { Db, MongoClient, ObjectID } from "mongodb";
 
 import config = require("config");
 import moment = require("moment");
@@ -92,7 +92,28 @@ class MongoManager {
   }
 
   async getLocation(id: string) {
-    throw new Error("Not implemented");
+    try {
+      const query = { _id: id };
+      const locationUpdate = await this.database
+        .collection(LOCATION_UPDATES_COLLECTION_NAME)
+        .findOne(query);
+      if (!locationUpdate) {
+        console.log("No location update found");
+        return null;
+      }
+      return locationUpdate;
+    } catch (error) {
+      throw error;
+    }
+    return {
+      _id: id,
+      longitude: -73.93587335,
+      latitude: 41.69434459,
+      hospital: {
+        longitude: -73.935616,
+        latitude: 41.694549
+      }
+    };
   }
 
   async addLocationUpdate(eta, locationUpdate): Promise<void> {
